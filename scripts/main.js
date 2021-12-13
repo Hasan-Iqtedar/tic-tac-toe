@@ -63,7 +63,7 @@ let Game = (() => {
         }
         totalTurns++;
 
-        if (!result && totalTurns >= 8) {
+        if (!result && totalTurns > 8) {
             result = "Draw";
         }
 
@@ -72,12 +72,6 @@ let Game = (() => {
 
     let endGame = (result) => {
         let container = document.querySelectorAll('.cell');
-        if (result === "Draw") {
-            console.log("Draw");
-        }
-        else {
-            console.log("Player " + result + " wins!");
-        }
         container.forEach((cell, index) => {
             cell.removeEventListener('click', DisplayController.markCell)
         });
@@ -90,6 +84,7 @@ let Game = (() => {
 let DisplayController = (() => {
 
     let result;
+    let description = document.querySelector(".description");
 
     let markCell = (event) => {
         cell = event.target;
@@ -100,16 +95,24 @@ let DisplayController = (() => {
                 GameBoard.gameBoard[index] = "X";
                 Game.playerX.turn = false;
                 Game.Player0.turn = true;
+                description.textContent = "Player 0's turn"
             }
             else {
                 cell.textContent = '0';
                 GameBoard.gameBoard[index] = "0";
                 Game.playerX.turn = true;
                 Game.Player0.turn = false;
+                description.textContent = "Player X's turn"
             }
         }
         result = Game.checkWinOrDraw()
         if (result) {
+            if (result === "Draw") {
+                description.textContent = "Its a Draw!";
+            }
+            else {
+                description.textContent = `Player ${result} Won!`;
+            }
             Game.endGame(result);
         }
     }
