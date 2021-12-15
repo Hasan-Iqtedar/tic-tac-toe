@@ -14,13 +14,16 @@ let Player = (name) => {
 
 let Game = (() => {
     let playerX = Player('X');
-    let Player0 = Player('0');
+    let player0 = Player('0');
     let gameStatus = true;
     let totalTurns = 0;
 
     playerX.turn = true;
 
     let getGameStatus = () => { return gameStatus; }
+    let getTotalTurns = () => { return totalTurns; }
+    let setGameStatus = (newGameStatus) => { gameStatus = newGameStatus; }
+    let setTotalTurns = (newValue) => { totalTurns = newValue; }
 
     let compareCells = (index1, index2, index3) => {
         if (GameBoard.gameBoard[index1] === GameBoard.gameBoard[index2] && GameBoard.gameBoard[index2] === GameBoard.gameBoard[index3]) {
@@ -30,9 +33,9 @@ let Game = (() => {
                 return playerX.name;
             }
             else if (GameBoard.gameBoard[index1] === '0') {
-                Player0.winStatus = true;
+                player0.winStatus = true;
                 gameStatus = false;
-                return Player0.name;
+                return player0.name;
             }
         }
     }
@@ -70,20 +73,30 @@ let Game = (() => {
         return result;
     }
 
-    let endGame = (result) => {
+    let endGame = () => {
         let container = document.querySelectorAll('.cell');
         container.forEach((cell, index) => {
             cell.removeEventListener('click', DisplayController.markCell)
         });
     }
 
-    return { playerX, Player0, endGame, getGameStatus, checkWinOrDraw }
+    return {
+        playerX,
+        player0, totalTurns,
+        endGame,
+        getGameStatus,
+        getTotalTurns,
+        setGameStatus,
+        setTotalTurns,
+        checkWinOrDraw
+    }
 
 })();
 
 let DisplayController = (() => {
 
     let result;
+    let resetButton = document.querySelector('#reset-button');
     let description = document.querySelector(".description");
 
     let markCell = (event) => {
@@ -94,14 +107,14 @@ let DisplayController = (() => {
                 cell.textContent = "X";
                 GameBoard.gameBoard[index] = "X";
                 Game.playerX.turn = false;
-                Game.Player0.turn = true;
+                Game.player0.turn = true;
                 description.textContent = "Player 0's turn"
             }
             else {
                 cell.textContent = '0';
                 GameBoard.gameBoard[index] = "0";
                 Game.playerX.turn = true;
-                Game.Player0.turn = false;
+                Game.player0.turn = false;
                 description.textContent = "Player X's turn"
             }
         }
@@ -113,7 +126,7 @@ let DisplayController = (() => {
             else {
                 description.textContent = `Player ${result} Won!`;
             }
-            Game.endGame(result);
+            Game.endGame();
         }
     }
 
@@ -123,6 +136,24 @@ let DisplayController = (() => {
             cell.addEventListener('click', markCell);
         });
     }
+
+    resetButton.addEventListener('click', () => {
+        Game.setGameStatus(true);
+        Game.playerX.turn = true;
+        Game.player0.turn = false;
+        Game.setTotalTurns(0)
+        description.textContent = "Player X's turn";
+        result = undefined;
+        let container = document.querySelectorAll('.cell');
+        container.forEach((cell) => {
+            cell.textContent = '';
+            cell.addEventListener('click', markCell);
+        });
+        for (let i = 0; i < GameBoard.gameBoard.length; i++) {
+            GameBoard.gameBoard[i] = '';
+        }
+    });
+
     return { renderContent, markCell }
 })();
 
