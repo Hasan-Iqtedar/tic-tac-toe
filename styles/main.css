@@ -25,7 +25,7 @@
 }
 
 .cell {
-    height: 120px;
+    height: 60px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -56,4 +56,16 @@
 
 #reset-button:hover {
     background-color: rgb(193, 196, 193);
+}
+
+@media (min-width: 500px) {
+    .cell {
+        height: 100px;
+    }
+}
+
+@media (min-width: 700px) {
+    .cell {
+        height: 120px;
+    }
 }
