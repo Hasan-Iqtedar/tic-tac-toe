@@ -117,16 +117,16 @@ let DisplayController = (() => {
                 Game.player0.turn = false;
                 description.textContent = "Player X's turn"
             }
-        }
-        result = Game.checkWinOrDraw()
-        if (result) {
-            if (result === "Draw") {
-                description.textContent = "Its a Draw!";
+            result = Game.checkWinOrDraw()
+            if (result) {
+                if (result === "Draw") {
+                    description.textContent = "Its a Draw!";
+                }
+                else {
+                    description.textContent = `Player ${result} Won!`;
+                }
+                Game.endGame();
             }
-            else {
-                description.textContent = `Player ${result} Won!`;
-            }
-            Game.endGame();
         }
     }
 
